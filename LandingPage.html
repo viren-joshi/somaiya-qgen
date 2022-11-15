@@ -53,20 +53,20 @@
                 Question</button>
             <div class="btn-grp col-auto dropdown">
                 <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Choose Subject </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Action</a>
+                    aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(false)">Choose Subject </button>
+                <div class="dropdown-menu" id="facultyCourseDropdown">
+                    <!-- <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Something else here</a> -->
                 </div>
             </div>
             <div class="btn-grp col-auto dropdown">
                 <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Choose Module </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Action</a>
+                    aria-haspopup="true" aria-expanded="false" onclick="getFacultyModules()">Choose Module </button>
+                <div class="dropdown-menu" id="facultyModuleDropdown">
+                    <!-- <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="#">Something else here</a> -->
                 </div>
             </div>
             <button class="btn btn-outline blu-btn col-auto" type="button" data-bs-toggle="modal"
@@ -94,19 +94,16 @@
                     <div class="row justify-content-evenly w-100 my-3 mx-2">
                         <div class="btn-grp col-auto dropdown">
                             <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose Subject
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(true)">Choose Subject
                             </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                            <div class="dropdown-menu" id="modalFacultyCourseDropdown">
                             </div>
                         </div>
                         <div class="btn-grp col-auto dropdown">
                             <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="getFacultyModules(1)">Select
                                 Module</button>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu" id="modalFacultyModuleDropdown">
                                 <a class="dropdown-item" href="#">Action</a>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
@@ -160,15 +157,35 @@
         // TODO: generateQuestion() function to be added
 
         var questionData = ' ';
+        var selectedCourseId = null;
+        var selectedModuleId = null;
 
-        fetch('https://6254-1-186-127-5.in.ngrok.io/questions/')
-            .then(function (response) {
+        getQuestions(null);
+
+        function getQuestions(){
+            /*
+               @Taaha pls edit the API to ask for courseID as a parameter
+
+               CONVERT THIS INTO POST !!
+
+               If ID parameter (course or module or both) sent is 'null' then send all the questions of the courses that the faculty teaches.
+            */
+
+            data = {
+                courseId : selectedCourseId,
+                moduleId : selectedModuleId
+            }
+            
+           fetch('https://6254-1-186-127-5.in.ngrok.io/questions/')
+           .then(function (response) {
                 return response.json()
             }).then(function (questions) {
                 console.log(questions)
                 question_data = questions;
                 render_questions(question_data);
-            });
+            });   
+        }
+
 
         function render_questions(question_data) {
             question_str = '';
@@ -203,6 +220,73 @@
             }
             // console.log(question_str);
             document.getElementById("question-container").innerHTML = question_str;
+        }
+
+        function getFacultyCourses(isModal){
+            // @taaaahahaha pls send the apis like this
+            /* 
+                [
+                    {
+                        id : courseid1
+                        name : "course name"
+                    }
+                    {
+                        id : courseid2
+                        name : "course name" 
+                    }
+                ]
+            */
+            fetch("taaha.pls.send.the.api.link/faculty/modules").then( (response) => response.JSON()).then( function (courses){
+                var courses_str = '';
+                for(var i in courses){
+                    courses_str +=`
+                        <div class="dropdown-item" 
+                        onclick=" selectedCourseId = ${i['id']};getQuestions()";>${i['name']}</div>
+                    `
+                }
+                document.getElementById(isModal ? 'modalFacultyCourseDropdown':'facultyCourseDropdown').innerHTML = courses_str;
+                
+            })
+        }
+
+        // function getCourseList(id){
+
+        // }
+
+        function getFacultyModules(isModal){
+            // @taaaahahaha pls send the apis like this
+            /* 
+                [
+                    {
+                        id : moduleId1
+                        name : "module name"
+                    }
+                    {
+                        id : moduleId2
+                        name : "module name" 
+                    }
+                ]
+            */
+            fetch("taaha.pls.send.the.api.link").then( (response) => response.JSON()).then( function (modules){
+                var modules_str = '';
+                for(var i in modules){
+                    modules_str +=`
+                        <div class="dropdown-item" onclick="getModuleList(${i['id']})">${i['name']}</div>
+                    `
+                }
+                document.getElementById(isModal ? 'modalFacultyModuleDropdown':'facultyModuleDropdown').innerHTML = courses_str;
+            })
+        }
+
+        
+
+        function getModuleList(id){
+            if(selectedCourseId == null){
+                // TODO: Add alert to select course first ! 
+            } else  {
+                selectedModuleId = id;
+            }
+            getQuestions();
         }
 
         function upvoteQuestion(id, user_id) {
