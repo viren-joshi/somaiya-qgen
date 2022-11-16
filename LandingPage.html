@@ -150,9 +150,6 @@
 
 
     <script>
-        // TODO: saveChanges() function to be added
-        // TODO: add a function to display the question and answer in the card
-        // TODO: generateQuestion() function to be added
 
         var questionData = ' ';
         var selectedCourseId = null;
@@ -161,20 +158,17 @@
         getQuestions(null);
 
         function getQuestions(){
-            /*
-               @Taaha pls edit the API to ask for courseID as a parameter
-
-               CONVERT THIS INTO POST !!
-
-               If ID parameter (course or module or both) sent is 'null' then send all the questions of the courses that the faculty teaches.
-            */
-
-            data = {
-                courseId : selectedCourseId,
-                moduleId : selectedModuleId
-            }
+            var url = "taaha.pls.send.api.url";
             
-           fetch('https://6254-1-186-127-5.in.ngrok.io/questions/')
+            if(selectedCourseId != null) {
+                if(selectedModuleId != null) {
+                    url+=`/moduleId=${selectedModuleId}`;
+                } else {
+                    url+=`/courseId=${selectedCourseId}`;
+                }
+            }
+
+           fetch(url)
            .then(function (response) {
                 return response.json()
             }).then(function (questions) {
@@ -282,69 +276,69 @@
         }
 
         
-        function bookmarkQuestion(qID,uID){
-            // This API here works just like upvote/downvote api @taaha
+        // function bookmarkQuestion(qID,uID){
+        //     // This API here works just like upvote/downvote api @taaha
             
 
-            var bkmk = document.getElementById(`bkmk-${id}`);
-            var data = {
-                "question_id": id,
-                "user_id": 1,
-            }
-            const url = "taaha.pls.send.url";
-            if (thumb.classList.contains('bi-bookmark-fill')) {
-                data["function"] = "remove_bookmark";
-                const other_params = {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }
-                console.log(other_params);
-                fetch(url, other_params)
-                    // "bi bi-hand-thumbs-up-fill"
-                    .then(function (response) {
-                        console.log(response)
-                        if (response.ok) {
-                            console.log("Bookmark Removed :)");
-                            // refresh();
-                            thumb.classList.remove("bi-bookmark-fill");
-                            thumb.classList.add("bi-bookmark");
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
-                        }
-                    }
-                    )
+        //     var bkmk = document.getElementById(`bkmk-${id}`);
+        //     var data = {
+        //         "question_id": id,
+        //         "user_id": 1,
+        //     }
+        //     const url = "taaha.pls.send.url";
+        //     if (thumb.classList.contains('bi-bookmark-fill')) {
+        //         data["function"] = "remove_bookmark";
+        //         const other_params = {
+        //             method: "POST",
+        //             mode: "cors",
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify(data)
+        //         }
+        //         console.log(other_params);
+        //         fetch(url, other_params)
+        //             // "bi bi-hand-thumbs-up-fill"
+        //             .then(function (response) {
+        //                 console.log(response)
+        //                 if (response.ok) {
+        //                     console.log("Bookmark Removed :)");
+        //                     // refresh();
+        //                     thumb.classList.remove("bi-bookmark-fill");
+        //                     thumb.classList.add("bi-bookmark");
+        //                 } else {
+        //                     throw new Error("Could not reach the API: " + response.statusText);
+        //                 }
+        //             }
+        //             )
 
-            } else {
-                data["function"] = "add_bookmark";
-                const other_params = {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }
-                console.log(other_params);
-                fetch(url, other_params)
-                    // "bi bi-hand-thumbs-up-fill"
-                    .then(function (response) {
-                        console.log(response)
-                        if (response.ok) {
-                            console.log("Question Bookmarked :)")
-                            // refresh();
-                            thumb.classList.remove("bi-bookmark");
-                            thumb.classList.add("bi-bookmark-fill");
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
-                        }
-                    }
-                    )
-            }
-        }
+        //     } else {
+        //         data["function"] = "add_bookmark";
+        //         const other_params = {
+        //             method: "POST",
+        //             mode: "cors",
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify(data)
+        //         }
+        //         console.log(other_params);
+        //         fetch(url, other_params)
+        //             // "bi bi-hand-thumbs-up-fill"
+        //             .then(function (response) {
+        //                 console.log(response)
+        //                 if (response.ok) {
+        //                     console.log("Question Bookmarked :)")
+        //                     // refresh();
+        //                     thumb.classList.remove("bi-bookmark");
+        //                     thumb.classList.add("bi-bookmark-fill");
+        //                 } else {
+        //                     throw new Error("Could not reach the API: " + response.statusText);
+        //                 }
+        //             }
+        //             )
+        //     }
+        // }
 
         function getModuleList(id){
             if(selectedCourseId == null){
