@@ -93,44 +93,47 @@
                         answers for better training of our model.</div>
                     <div class="row justify-content-evenly w-100 my-3 mx-2">
                         <div class="btn-grp col-auto dropdown">
-                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button"
+                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " id="facultyCoursesButton" type="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(true)">Choose Subject
                             </button>
                             <div class="dropdown-menu" id="modalFacultyCourseDropdown">
                             </div>
                         </div>
                         <div class="btn-grp col-auto dropdown">
-                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="getFacultyModules(1)">Select
+                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " id="facultyModulesButton" type="button"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select
                                 Module</button>
                             <div class="dropdown-menu" id="modalFacultyModuleDropdown">
                             </div>
                         </div>
                         <div class="btn-grp col-auto dropdown">
-                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button"
+                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" id = "BTLevelButton"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose BT
                                 Level</button>
                                 
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" onclick="displayBT(1)" href="#">1</a>
+                                <a class="dropdown-item" onclick="displayBT(2)" href="#">2</a>
+                                <a class="dropdown-item" onclick="displayBT(3)" href="#">3</a>
+                                <a class="dropdown-item" onclick="displayBT(4)" href="#">4</a>
+                                <a class="dropdown-item" onclick="displayBT(5)" href="#">5</a>
+                                <a class="dropdown-item" onclick="displayBT(6)" href="#">6</a>
                             </div>
                         </div>
                         <div class="input-group my-3">
-                            <input type="text" class="form-control border-end-0" placeholder="Enter your question"
+                            <input type="text" id="questionInput" class="form-control border-end-0" placeholder="Enter your question"
                                 aria-label="Enter your question" aria-describedby="button-addon2">
                             <button class="btn border-top border-end border-bottom" type="button" id="button-addon2"><i
                                     class="bi bi-upload"></i></button>
                         </div>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control border-end-0" placeholder="Enter your answer"
+                            <input id="answerInput" type="text" class="form-control border-end-0" placeholder="Enter your answer"
                                 aria-label="Enter your answer" aria-describedby="button-addon2">
                             <button class="btn border-top border-end border-bottom" type="button" id="button-addon2"><i
                                     class="bi bi-upload"></i></button>
                         </div>
                         <div class="input-group">
-                            <input type="file" class="form-control" id="inputGroupFile04"
+                            <input type="file" class="form-control" id="inputGroupFile"
                                 aria-describedby="inputGroupFileAddon04" aria-label="Upload">
 
                         </div>
@@ -140,7 +143,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn grey-outln-btm" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn blu-prim text-white" onclick="saveChanges()">Save changes</button>
+                    <button type="button" class="btn blu-prim text-white" onclick="postAQuestion()">Save changes</button>
                 </div>
 
             </div>
@@ -154,6 +157,9 @@
         var questionData = ' ';
         var selectedCourseId = null;
         var selectedModuleId = null;
+        var allCourses = {};
+        var allModules = {};
+        var selectedBTLevel = null;
 
         getQuestions(null);
 
@@ -229,9 +235,9 @@
                 }
 
                 if (curr['has_flagged']==true){
-                    flag_str = `<i class="bi bi-flag-fill col-1 onclick="flagQuestion(${curr['id']})" id="flag-${curr['id']}"></i>`
+                    flag_str = `<i class="bi bi-flag-fill col-1" onclick="flagQuestion(${curr['id']})" id="flag-${curr['id']}"></i>`
                 } else {
-                    flag_str = `<i class="bi bi-flag col-1 onclick="flagQuestion(${curr['id']})" id="flag-${curr['id']}"></i>`
+                    flag_str = `<i class="bi bi-flag col-1" onclick="flagQuestion(${curr['id']})" id="flag-${curr['id']}"></i>`
                 }
                 question_str += `
                 <div class="card mx-5 my-2 px-2 red-text">
@@ -264,59 +270,109 @@
         }
 
         function getFacultyCourses(isModal){
-            // @taaaahahaha pls send the apis like this
-            /* 
-                [
-                    {
-                        id : courseid1
-                        name : "course name"
-                    }
-                    {
-                        id : courseid2
-                        name : "course name" 
-                    }
-                ]
-            */
-            fetch("https://d0eb-1-186-127-18.in.ngrok.io/faculty/modules").then( (response) => response.JSON()).then( function (courses){
+
+            fetch("https://d0eb-1-186-127-18.in.ngrok.io/courses/").then( (response) => response.json()).then( function (courses){
+                allCourses = courses;
+                console.log(courses);
                 var courses_str = '';
                 for(var i in courses){
+                    curr = courses[i];
                     courses_str +=`
-                        <div class="dropdown-item" 
-                        onclick=" selectedCourseId = ${i['id']};getQuestions()";>${i['name']}</div>
+                        <div class="dropdown-item" onclick=getFacultyModules(${curr["id"]},true) id="subject-${curr["id"]}">${curr['name']}</div>
                     `
                 }
+
+                console.log(courses_str);
+
                 document.getElementById(isModal ? 'modalFacultyCourseDropdown':'facultyCourseDropdown').innerHTML = courses_str;
                 
             })
         }
 
-        // function getCourseList(id){
+        function displayBT(level){
+            document.getElementById("BTLevelButton").innerHTML = `BT Level ${level}`;
 
-        // }
+            selectedBTLevel = level;
+        }
+        
+        function postAQuestion(){
+            // const inputFile = document.getElementById("inputGroupFile").value;
+            // console.log(inputFile);
+            // formData.append('myFile', inputFile.files[0]);
 
-        function getFacultyModules(isModal){
-            // @taaaahahaha pls send the apis like this
-            /* 
-                [
-                    {
-                        id : moduleId1
-                        name : "module name"
+            var data = {
+                "question": document.getElementById("questionInput").value,
+                "answer": document.getElementById("answerInput").value,
+                "BT_level": selectedBTLevel,
+                "course": selectedCourseId,
+                "module": selectedModuleId,
+                "q_file": null,
+                "q_image": null,
+            }
+            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/";
+
+            const other_params = {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'enctype': 'multipart/form-data'
+                    },
+                    body: JSON.stringify(data)
+            }
+
+            fetch(url, other_params)
+                    .then(function (response) {
+                        console.log(response)
+                        if (response.ok) {
+                            console.log("Successful post");
+                            getQuestions();
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
                     }
-                    {
-                        id : moduleId2
-                        name : "module name" 
-                    }
-                ]
-            */
-            fetch("taaha.pls.send.the.api.link").then( (response) => response.JSON()).then( function (modules){
+                    )
+        }
+
+        function getFacultyModules(courseId,isModal){
+            for (var k in allCourses){
+                if (allCourses[k]['id']==courseId){
+                    document.getElementById("facultyCoursesButton").innerText = allCourses[k]['name'];
+                }
+            }
+
+
+            if (isModal){
+                selectedCourseId = courseId;
+            }
+
+            fetch(`https://d0eb-1-186-127-18.in.ngrok.io/courses/?id=${courseId}`).then( (response) => response.json()).then( function (modules){
                 var modules_str = '';
+
+                allModules = modules;
                 for(var i in modules){
+                    curr = modules[i];
                     modules_str +=`
-                        <div class="dropdown-item" onclick="getModuleList(${i['id']})">${i['name']}</div>
+                        <div class="dropdown-item" onclick=setModuleValue(${curr["id"]},${isModal}) id="modules-${curr["id"]}">${curr['name']}</div>
                     `
                 }
-                document.getElementById(isModal ? 'modalFacultyModuleDropdown':'facultyModuleDropdown').innerHTML = courses_str;
-            })
+
+                document.getElementById(isModal ? 'modalFacultyModuleDropdown':'facultyModuleDropdown').innerHTML = modules_str;
+
+        })
+    };
+
+        function setModuleValue(moduleId,isModal){
+            for (var k in allModules){
+                if (allModules[k]['id']==moduleId){
+                    document.getElementById("facultyModulesButton").innerText = allModules[k]['name'];
+                }
+            }
+
+
+            if (isModal){
+                selectedModuleId = moduleId;
+            }
         }
   
         function bookmarkQuestion(qID,uID){
