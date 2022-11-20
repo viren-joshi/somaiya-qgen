@@ -62,11 +62,12 @@
 
     <script>
         function createQuestions() {
+            let apiUrl = "";
 
             var data = {
                 "paragraph": document.getElementById("input_paragraph").value
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/generatemcq/";
+            const url = `${apiUrl}/generatemcq/`;
 
             const other_params = {
                     method: "POST",

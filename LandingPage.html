@@ -153,6 +153,7 @@
 
 
     <script>
+        let apiUrl = "";
 
         var questionData = ' ';
         var selectedCourseId = null;
@@ -164,7 +165,7 @@
         getQuestions(null);
 
         function getQuestions(){
-            var url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/?";
+            var url = `${apiUrl}/questions/?`;
             
             if(selectedCourseId != null) {
                 if(selectedModuleId != null) {
@@ -271,7 +272,7 @@
 
         function getFacultyCourses(isModal){
 
-            fetch("https://d0eb-1-186-127-18.in.ngrok.io/courses/").then( (response) => response.json()).then( function (courses){
+            fetch(`${apiUrl}/courses/`).then( (response) => response.json()).then( function (courses){
                 allCourses = courses;
                 console.log(courses);
                 var courses_str = '';
@@ -309,7 +310,7 @@
                 "q_file": null,
                 "q_image": null,
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/";
+            // const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/";
 
             const other_params = {
                     method: "POST",
@@ -321,7 +322,9 @@
                     body: JSON.stringify(data)
             }
 
-            fetch(url, other_params)
+            // TODO: Convert to "/questions/postNewQuestion" when deployed
+
+            fetch(`${apiUrl}/questions/`, other_params)
                     .then(function (response) {
                         console.log(response)
                         if (response.ok) {
@@ -346,7 +349,7 @@
                 selectedCourseId = courseId;
             }
 
-            fetch(`https://d0eb-1-186-127-18.in.ngrok.io/courses/?id=${courseId}`).then( (response) => response.json()).then( function (modules){
+            fetch(`${apiUrl}/courses/?id=${courseId}`).then( (response) => response.json()).then( function (modules){
                 var modules_str = '';
 
                 allModules = modules;
@@ -376,7 +379,6 @@
         }
   
         function bookmarkQuestion(qID,uID){
-            // This API here works just like upvote/downvote api @taaha
             
 
             var bkmk = document.getElementById(`bkmk-${qID}`);
@@ -384,7 +386,7 @@
                 "question_id": qID,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/bookmark/";
+            const url = `${apiUrl}/questions/bookmark/`;
             if (bkmk.classList.contains('bi-bookmark-fill')) {
                 data["function"] = "remove_bookmark";
                 const other_params = {
@@ -454,7 +456,7 @@
                 "question_id": id,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/upvote/";
+            const url = `${apiUrl}/questions/upvote/`;
             if (thumb.classList.contains('bi-hand-thumbs-up-fill')) {
                 data["function"] = "remove_upvote";
                 const other_params = {
@@ -516,7 +518,7 @@
                 "question_id": id,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/flag/";
+            const url = `${apiUrl}/questions/flag/`;
             if (thumb.classList.contains('bi-flag-fill')) {
                 data["function"] = "remove_flag";
                 const other_params = {
