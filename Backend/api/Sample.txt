@@ -1,0 +1,105 @@
+import firebase_admin
+from firebase_admin import db
+from flask import Flask, request
+from flask_cors import CORS
+
+
+
+cred_obj = firebase_admin.credentials.Certificate('key.json')
+default_app = firebase_admin.initialize_app(cred_obj, {
+	'databaseURL':'https://sih-sc500-default-rtdb.firebaseio.com/'
+	})
+
+app=Flask(__name__)
+CORS(app)
+
+@app.route('/')
+def home():
+    return "Hello Welcome to the API homepage"
+
+
+# Done
+
+@app.route('/AddQuestion',methods=['POST'])
+def add_question():
+    ref = db.reference('/Question/')
+    data=request.json
+    data['upvotes']=0
+    print(data)
+    ref.push(data)
+    return "Update Successful"
+
+# Done
+
+@app.route('/UpdateVote',methods=['POST'])
+def updateVote():
+    #takes a JSON with keys, QID, UID and user_types
+    data = request.json
+    QID = str(data['question_id'])
+    UID = str(data['user_id'])
+    temp_ref=db.reference('/Votes/')
+    ref = db.reference('/Votes/' + str(QID) + "/" + str(UID))
+    if temp_ref.child(QID+"/"+UID).get()==None:
+        print('Im in')
+        ref.set({'user_type': data['user_type']})
+        question_ref=db.reference('/Question/'+QID)
+        data=question_ref.get()
+        upvote_count=data['upvotes']
+        print(upvote_count)
+        upvote_count += 1
+        print(upvote_count)
+        question_ref.update({'upvotes':upvote_count})
+    else:
+        ref.set({'user_type': data['user_type']})
+        question_ref=db.reference('/Question/'+QID)
+    return 'Success'
+
+# Done (Ask if everybody wants to add an upvote threshold)
+
+@app.route('/GetAllQuestions', methods=['GET'])
+def getAllQuestions():
+    ref = db.reference('/Question/')
+    var = ref.get()
+    return var
+
+# Done
+
+@app.route("/DeleteQuestion", methods=["POST"])
+def delete_question():
+    data=request.json
+    question_id=data['question_id']
+    ref = db.reference("/Question/"+question_id)
+    ref.delete()
+    return "Delete Successful"
+
+# Done
+
+@app.route("/EditQuestion", methods=["POST"])
+def edit_question():
+    data=request.json
+    question_id=data['question_id']
+    ref = db.reference("/Question/"+question_id)
+    del data['question_id']
+    ref.update(data)
+    return "Edit Successful"
+
+@app.route("/AssignUserType", methods = ['POST'])
+def assignUserType():
+    data = request.json
+    user_id = data['user_id']
+    user_type = data['user_type']
+    ref = db.reference('/Users/' + user_id)
+    ref.set({'user_type': user_type})
+    return 'Success'
+
+# Done 
+
+@app.route("/GetUserType/<string:uid>", methods = ['GET'])
+def getUserType(uid):
+    user_id = uid
+    ref = db.reference('/Users/' + user_id)
+    print(ref.child('user_type').get())
+    return str(ref.child('user_type').get())
+
+if __name__ == "__main__":
+    app.run(debug=True)
