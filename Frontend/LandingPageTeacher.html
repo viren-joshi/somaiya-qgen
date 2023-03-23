@@ -19,6 +19,7 @@
 </head>
 
 <body>
+    <!-- Drawer -->
     <nav class="navbar navbar-expand-lg red-med p-2">
         <div class="container-fluid">
 
@@ -37,7 +38,7 @@
                         <a class="nav-link" href="#">Bookmarks</a>
                         <a class="nav-link" href="#">Profile</a>
                         <a class="nav-link" href="#">Connect</a>
-
+                        <a class="nav-link text-danger" onclick=logout() href="#">Logout</a>
                     </nav>
 
                 </div>
@@ -48,12 +49,14 @@
                 <button class="btn btn-outline-success btn-close-white " type="submit">Search</button>
             </form>
     </nav>
+
+    <!-- Generate Questions -->
     <div class="container mx-auto d-flex text-center">
         <div class="row justify-content-evenly w-100 my-3 mx-2">
             <button class="btn btn-outline blu-btn col-auto" type="submit" onclick="generateQuestions()">Generate A
                 Question</button>
             <div class="btn-grp col-auto dropdown">
-                <button class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
+                <button  id="facultyCoursesButton" class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(false)">Choose Subject </button>
                 <div class="dropdown-menu" id="facultyCourseDropdown">
                     <!-- <a class="dropdown-item" href="#">Action</a>
@@ -80,8 +83,7 @@
 
 
 
-
-
+    <!-- Post Question-->
     <div class="modal" tabindex="-1" id="postAQuestionModal">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -94,7 +96,7 @@
                         answers for better training of our model.</div>
                     <div class="row justify-content-evenly w-100 my-3 mx-2">
                         <div class="btn-grp col-auto dropdown">
-                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " id="facultyCoursesButton" type="button"
+                            <button class="btn btn-outline dropdown-toggle grey-outln-btm " id="modalFacultyCoursesButton" type="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(true)">Choose Subject
                             </button>
                             <div class="dropdown-menu" id="modalFacultyCourseDropdown">
@@ -121,15 +123,19 @@
                                 <a class="dropdown-item" onclick="displayBT(6)" href="#">6</a>
                             </div>
                         </div>
+                        <div class="btn-grp col-auto dropdown">
+                            <input id="marksInput" type="number" class="form-control w-auto border-end-1" placeholder="Enter marks"
+                                aria-label="Enter marks" aria-describedby="button-addon2" required="true">
+                        </div>
                         <div class="input-group my-3">
                             <input type="text" id="questionInput" class="form-control border-end-0" placeholder="Enter your question"
-                                aria-label="Enter your question" aria-describedby="button-addon2">
-                            <button class="btn border-top border-end border-bottom" type="button" id="button-addon2"><i
+                                aria-label="Enter your question" aria-describedby="button-addon2" required="true">
+                            <button class="btn border-top border-end border-bottom" type="file" id="button-addon2"><i
                                     class="bi bi-upload"></i></button>
                         </div>
                         <div class="input-group mb-3">
                             <input id="answerInput" type="text" class="form-control border-end-0" placeholder="Enter your answer"
-                                aria-label="Enter your answer" aria-describedby="button-addon2">
+                                aria-label="Enter your answer" aria-describedby="button-addon2" required="true">
                             <button class="btn border-top border-end border-bottom" type="button" id="button-addon2"><i
                                     class="bi bi-upload"></i></button>
                         </div>
@@ -154,7 +160,7 @@
 
 
     <script>
-        let apiUrl = "http://127.0.0.1:8000/";
+        let apiUrl = "https://f84d-182-48-210-159.in.ngrok.io/";
 
         token = window.localStorage.getItem('auth_token');
         console.log(token);
@@ -177,21 +183,20 @@
         getQuestions(null);
 
         function getQuestions(){
-            var url = `${apiUrl}/questions/?`;
+            // var url = `${apiUrl}questions/?`;
             
-            if(selectedCourseId != null) {
-                if(selectedModuleId != null) {
-                    url+=`moduleId=${selectedModuleId}`;
-                } else {
-                    url+=`courseId=${selectedCourseId}`;
-                }
-                url += `&`
-            } 
+            // if(selectedCourseId != null) {
+            //     if(selectedModuleId != null) {
+            //         url+=`moduleId=${selectedModuleId}&`;
+            //     }
+            //     url+=`courseId=${selectedCourseId}`;
+            //     url += `&`
+            // } 
 
-            url += `uID=${localStorage.getItem("logged_id")}`
+            // url += `uID=${localStorage.getItem("user_name")}`
 
             
-            
+            var url = apiUrl;
     
                 let fetchRes = fetch(url,options)
                 .then(function (response) {
@@ -294,16 +299,15 @@
 
             fetch(`${apiUrl}/courses/`,options).then( (response) => response.json()).then( function (courses){
                 allCourses = courses;
-                console.log(courses);
                 var courses_str = '';
-                for(var i in courses){
-                    curr = courses[i];
+                courses.forEach(element => {
+                    console.log(element);
                     courses_str +=`
-                        <div class="dropdown-item" onclick=getFacultyModules(${curr["id"]},true) id="subject-${curr["id"]}">${curr['name']}</div>
+                        <div class="dropdown-item" onclick=getFacultyModules(${element["id"]},${isModal}) id="subject-${element["id"]}">${element['name']}</div>
                     `
-                }
+                });
 
-                console.log(courses_str);
+                // console.log(courses_str);
 
                 document.getElementById(isModal ? 'modalFacultyCourseDropdown':'facultyCourseDropdown').innerHTML = courses_str;
                 
@@ -315,6 +319,30 @@
 
             selectedBTLevel = level;
         }
+
+        function logout() {
+                data = window.localStorage.getItem('auth_token');
+    
+                console.log(data);
+    
+                let options = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Token ${data}`
+                    }
+                }
+    
+                let fetchRes = fetch(
+                    `${apiUrl}auth/logout/`,
+                    options);
+    
+                fetchRes.then(res =>
+                    res.json()).then(d => {
+                        console.log(d)
+                    })
+            }
         
         function postAQuestion(){
 
@@ -390,18 +418,20 @@
         }
 
         function getFacultyModules(courseId,isModal){
+
             for (var k in allCourses){
                 if (allCourses[k]['id']==courseId){
-                    document.getElementById("facultyCoursesButton").innerText = allCourses[k]['name'];
+                    if(isModal)
+                        document.getElementById("modalFacultyCoursesButton").innerText = allCourses[k]['name'];
+                    else
+                        document.getElementById("facultyCoursesButton").innerText = allCourses[k]['name'];
                 }
             }
-
-
             if (isModal){
                 selectedCourseId = courseId;
             }
 
-            fetch(`${apiUrl}/courses/?id=${courseId}`,options).then( (response) => response.json()).then( function (modules){
+            fetch(`${apiUrl}courses/?id=${courseId}`,options).then( (response) => response.json()).then( function (modules){
                 var modules_str = '';
 
                 allModules = modules;
@@ -436,7 +466,7 @@
             var bkmk = document.getElementById(`bkmk-${qID}`);
             var data = {
                 "question_id": qID,
-                "user_id": localStorage.getItem("logged_id"),
+                "user_id": localStorage.getItem("user_name"),
             }
             const url = `${apiUrl}/questions/bookmark/`;
             if (bkmk.classList.contains('bi-bookmark-fill')) {
@@ -506,7 +536,7 @@
             var thumb = document.getElementById(`upvote-${id}`);
             var data = {
                 "question_id": id,
-                "user_id": localStorage.getItem("logged_id"),
+                "user_id": localStorage.getItem("user_name"),
             }
             const url = `${apiUrl}/questions/upvote/`;
             if (thumb.classList.contains('bi-hand-thumbs-up-fill')) {
@@ -568,7 +598,7 @@
             var thumb = document.getElementById(`flag-${id}`);
             var data = {
                 "question_id": id,
-                "user_id": localStorage.getItem("logged_id"),
+                "user_id": localStorage.getItem("user_name"),
             }
             const url = `${apiUrl}/questions/flag/`;
             if (thumb.classList.contains('bi-flag-fill')) {

@@ -43,8 +43,8 @@
 
                                     <div class="form-floating mb-4">
                                         <input type="email" class="form-control" id="facultyEmail"
-                                            placeholder="Email address">
-                                        <label for="facultyEmail">Email address</label>
+                                            placeholder="SVV ID">
+                                        <label for="facultyEmail">SVV ID</label>
 
                                     </div>
 
@@ -62,8 +62,8 @@
 
                                     <div class="form-floating mb-4">
                                         <input type="email" class="form-control" id="facultyEmail"
-                                            placeholder="Email address">
-                                        <label for="facultyEmail">Email Address</label>
+                                            placeholder="Expert ID">
+                                        <label for="facultyEmail">Expert ID</label>
 
                                     </div>
 
@@ -81,8 +81,8 @@
 
 
 
-                        <button onclick="logout()">Logoout</button>
-                        <button onclick="check()">Check Status</button>
+                        <!-- <button onclick="logout()">Logoout</button>
+                        <button onclick="check()">Check Status</button> -->
 
 
 
@@ -96,8 +96,7 @@
         </div>
 
         <script>
-
-            const url = "http://127.0.0.1:8000/"
+            const url = "https://f84d-182-48-210-159.in.ngrok.io/"
     
             function login(t) {
                 
@@ -125,41 +124,26 @@
                     res.json()).then(d => {
                         console.log(d);
                         console.log(d.token);
-                        if (d.message == 'Success' && d.user_type == 0){
-                            window.location.href = "LandingPageTeacher.html";
+                        if(d.message == "Success") {
+                            // Login Successful
+                            window.localStorage.setItem('user_name', d.username);
+                            window.localStorage.setItem('auth_token', d.token);
+                            if(d.user_type == "Teacher") {
+                                window.location.href = "LandingPageTeacher.html";
+                            } else {
+                                // window.location.href = "LandingPageExpert.html";
+                            }
+                        } else {
+                            // Login Failed
+                            alert("Login Failed");
                         }
-                        else{
-                            window.location.href = "LandingPageExpert.html";
-                        }
-                        window.localStorage.setItem('auth_token', d.token);
+                        
                     })
             }
 
 
 
-            function logout() {
-                data = window.localStorage.getItem('auth_token');
-    
-                console.log(data);
-    
-                let options = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization': `Token ${data}`
-                    }
-                }
-    
-                let fetchRes = fetch(
-                    `${url}auth/logout/`,
-                    options);
-    
-                fetchRes.then(res =>
-                    res.json()).then(d => {
-                        console.log(d)
-                    })
-            }
+            
 
 
             function check() {
@@ -173,7 +157,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Authorization': `Token ${data}`
+                        'Authorization': `Token ${data}`,
                     }
                 }
     
