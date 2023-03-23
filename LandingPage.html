@@ -164,7 +164,7 @@
         getQuestions(null);
 
         function getQuestions(){
-            var url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/?";
+            var url = "https://b669-223-184-249-59.in.ngrok.io/questions/?";
             
             if(selectedCourseId != null) {
                 if(selectedModuleId != null) {
@@ -194,27 +194,41 @@
             var count = 0;
             for (var i in question_data) {
                 count++;
+                var choices_str = "";
                 var curr = question_data[i];
+                if (curr["type"]==0){
+                    console.log("working")
+                    for (let j=1; j<=4; j++){
+                choices_str += `<div class="row py-1 px-1">
+                    => ${curr["option_"+j]}
+                </div>`;
+                
+            }
+                }
                 if (curr['q_file']!=null || curr['q_image']!=null){
                     if (curr['q_file']==null){
                         attach_str = `<div class="row w-100 p-2">
                         <div class="container m-2 p-2 text-center">
-                            <a href="https://d0eb-1-186-127-18.in.ngrok.io${curr['q_image']}" target="_blank">Attachment </a>
+                            <i class="bi bi-paperclip"></i>
+                            <a href="https://b669-223-184-249-59.in.ngrok.io${curr['q_image']}" target="_blank">Attachment </a>
                         </div>
                     </div>`
                     } else if (curr['q_image']==null){
                         attach_str = `<div class="row w-100 p-2">
                         <div class="container m-2 p-2 text-center">
-                            <a href="https://d0eb-1-186-127-18.in.ngrok.io${curr['q_file']}" target="_blank">Attachment </a>
+                            <i class="bi bi-paperclip"></i>
+                            <a href="https://b669-223-184-249-59.in.ngrok.io${curr['q_file']}" target="_blank">Attachment </a>
                         </div>
                     </div>`
                     } else {
                         attach_str = `<div class="row w-100 p-2">
                         <div class="container col-6 m-2 p-2 text-center">
-                            <a href="https://d0eb-1-186-127-18.in.ngrok.io${curr['q_image']}" target="_blank">Attachment </a>
+                            <i class="bi bi-paperclip"></i>
+                            <a href="https://b669-223-184-249-59.in.ngrok.io${curr['q_image']}" target="_blank">Attachment </a>
                         </div>
                         <div class="container col-6 m-2 p-2 text-center">
-                            <a href="https://d0eb-1-186-127-18.in.ngrok.io${curr['q_file']}" target="_blank">Attachment </a>
+                            <i class="bi bi-paperclip"></i>
+                            <a href="https://b669-223-184-249-59.in.ngrok.io${curr['q_file']}" target="_blank">Attachment </a>
                         </div>
                     </div>`
                     }
@@ -257,6 +271,7 @@
                     <hr class="red-med p-0 m-0">
                     <div class="row w-100 p-2">
                         <p>${curr['answer']}</p>
+                        <p>${choices_str}</p>
                     </div>
                     <div class="row d-flex justify-content-between w-100 p-2">
                         ${upvote_str}
@@ -271,7 +286,7 @@
 
         function getFacultyCourses(isModal){
 
-            fetch("https://d0eb-1-186-127-18.in.ngrok.io/courses/").then( (response) => response.json()).then( function (courses){
+            fetch("https://b669-223-184-249-59.in.ngrok.io/courses/").then( (response) => response.json()).then( function (courses){
                 allCourses = courses;
                 console.log(courses);
                 var courses_str = '';
@@ -295,11 +310,9 @@
             selectedBTLevel = level;
         }
         
-        function postAQuestion(){
-            // const inputFile = document.getElementById("inputGroupFile").value;
-            // console.log(inputFile);
-            // formData.append('myFile', inputFile.files[0]);
+        var modal = document.getElementById("postAQuestionModal");
 
+        function postAQuestion(){
             var data = {
                 "question": document.getElementById("questionInput").value,
                 "answer": document.getElementById("answerInput").value,
@@ -309,7 +322,7 @@
                 "q_file": null,
                 "q_image": null,
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/";
+            const url = "https://b669-223-184-249-59.in.ngrok.io/questions/";
 
             const other_params = {
                     method: "POST",
@@ -346,7 +359,7 @@
                 selectedCourseId = courseId;
             }
 
-            fetch(`https://d0eb-1-186-127-18.in.ngrok.io/courses/?id=${courseId}`).then( (response) => response.json()).then( function (modules){
+            fetch(`https://b669-223-184-249-59.in.ngrok.io/courses/?id=${courseId}`).then( (response) => response.json()).then( function (modules){
                 var modules_str = '';
 
                 allModules = modules;
@@ -384,7 +397,7 @@
                 "question_id": qID,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/bookmark/";
+            const url = "https://b669-223-184-249-59.in.ngrok.io/questions/bookmark/";
             if (bkmk.classList.contains('bi-bookmark-fill')) {
                 data["function"] = "remove_bookmark";
                 const other_params = {
@@ -454,7 +467,7 @@
                 "question_id": id,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/upvote/";
+            const url = "https://b669-223-184-249-59.in.ngrok.io/questions/upvote/";
             if (thumb.classList.contains('bi-hand-thumbs-up-fill')) {
                 data["function"] = "remove_upvote";
                 const other_params = {
@@ -516,7 +529,7 @@
                 "question_id": id,
                 "user_id": localStorage.getItem("logged_id"),
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/questions/flag/";
+            const url = "https://b669-223-184-249-59.in.ngrok.io/questions/flag/";
             if (thumb.classList.contains('bi-flag-fill')) {
                 data["function"] = "remove_flag";
                 const other_params = {
@@ -569,6 +582,7 @@
                     )
             }
         }
+        
         function generateQuestions() {
             window.location.assign("GenerateQuestions.html");
         }

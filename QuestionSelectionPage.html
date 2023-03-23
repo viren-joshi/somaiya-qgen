@@ -49,7 +49,7 @@
     <div id="question-container"></div>
 
     <div class="row justify-content-center">
-        <button type="button" class="btn blu-prim m-3 col-2 text-white">Post the Questions</button>
+        <button type="button" class="btn blu-prim m-3 col-2 text-white" onclick="postQuest()">Post the Questions</button>
     </div>
 
     <script>
@@ -117,6 +117,7 @@
         "5": "Explain in brief active data mining"
     }
 }
+     
     renderQuestions();
 
     function renderQuestions(){
@@ -131,7 +132,7 @@
             for (var j in curr['choices']){
                 var curr_choice = curr['choices'][j];
                 choices_str += `<div class="row py-1 px-1">
-                    A] ${curr_choice}
+                    => ${curr_choice}
                 </div>`;
                 
             }
@@ -207,6 +208,37 @@
 
         }
         console.log(selected);
+    }
+
+    function postQuest(){
+        var data = {
+                "selected":""
+            }
+            const url = "https://b669-223-184-249-59.in.ngrok.io/addquestions/";
+
+            const other_params = {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+            }
+
+            fetch(url, other_params)
+                    .then(function (response) {
+
+                        if (response.ok) {
+
+                            console.log("Successful post");
+                            window.location.assign("LandingPage.html");
+    
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }
+                    )
+            
     }
     </script>
 

@@ -66,7 +66,7 @@
             var data = {
                 "paragraph": document.getElementById("input_paragraph").value
             }
-            const url = "https://d0eb-1-186-127-18.in.ngrok.io/generatemcq/";
+            const url = "https://b669-223-184-249-59.in.ngrok.io/generatemcq/";
 
             const other_params = {
                     method: "POST",
@@ -79,8 +79,9 @@
 
             fetch(url, other_params)
                     .then(function (response) {
-                        console.log(response)
+
                         if (response.ok) {
+
                             console.log("Successful post");
                             window.location.assign("QuestionSelectionPage.html");
     

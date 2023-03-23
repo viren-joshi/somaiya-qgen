@@ -81,6 +81,7 @@
                     window.location.href = "LandingPage.html";
                 })
                 .catch((error) => {
+                    window.alert("Invalid Credentials");
                     const errorCode = error.code;
                     const errorMessage = error.message;
                 });
