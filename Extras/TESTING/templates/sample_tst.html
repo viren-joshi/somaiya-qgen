@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h2>Check Status</h2>
+    <button onclick="getrequest()">Check</button>
+
+    <br>
+
+    <br><br>
+    <h2>Login using div</h2>
+    <div>
+        <input type="text" id="username" placeholder="Username">
+        <label for="username">Username</label>
+    </div>
+    <div>
+        <input type="password" id="password" placeholder="Password">
+        <label for="password">Password</label>
+    </div>
+
+    <button type="button" onclick="postrequest()">Login</button>
+
+    <br><br>
+    <br>
+
+    <h2>logout</h2>
+
+    <button onclick="logout()">Logoout</button>
+
+
+    <br><br>
+    <h2>Register</h2>
+    <div>
+        <input type="text" id="username2" placeholder="Username">
+        <label for="username">Username</label>
+    </div>
+    <div>
+        <input type="password" id="password2" placeholder="Password">
+        <label for="password">Password</label>
+    </div>
+
+    <button type="button" onclick="registerpostrequest()">Register</button>
+
+
+
+
+    <hr>
+    <br><br>
+
+    <h5>Post A Question</h5>
+
+
+
+    <input type="text" id="questionInput" placeholder="Enter your question" aria-label="Enter your question"
+        aria-describedby="button-addon2">
+
+
+    <input id="answerInput" type="text" placeholder="Enter your answer" aria-label="Enter your answer"
+        aria-describedby="button-addon2">
+
+
+
+    <input type="file" id="inputGroupFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+
+
+    <button type="button" onclick="postAQuestion()">POST</button>
+
+
+
+    <script>
+        const url = "http://127.0.0.1:8000/"
+
+
+        function postAQuestion() {
+
+
+            token = window.localStorage.getItem('auth_token');
+
+            let fileElement = document.getElementById('inputGroupFile');
+            
+
+            // check if user had selected a file
+            if (fileElement.files.length === 0) {
+                alert('please choose a file')
+                return
+            }
+
+            let file = fileElement.files[0]
+
+            let formData = new FormData();
+            formData.set('file', file);
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Token ${token}`
+              }
+            // import js script for using axios
+            axios.post("http://127.0.0.1:8000/auth/uploadfile/", formData, {
+                onUploadProgress: progressEvent => {
+                    const percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / progressEvent.total
+                    );
+                    console.log(`upload process: ${percentCompleted}%`);
+                },headers:headers
+            })
+                .then(res => {
+                    console.log(res.data);
+                    
+                    data = {
+                        "question": document.getElementById("questionInput").value,
+                        "answer": document.getElementById("answerInput").value,
+                        "file_slug": res.data['slug'],
+                    }
+                    
+                    let options = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': `Token ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    }
+
+                    let fetchRes = fetch(
+                        `${url}auth/postquestion/`,
+                        options);
+                    fetchRes.then(res =>
+                        res.json()).then(d => {
+                            console.log(d);
+                        })
+                })
+
+        }
+
+
+
+
+        function postrequest() {
+
+            data = {
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value
+            }
+            let options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }
+
+            let fetchRes = fetch(
+                `${url}auth/login/`,
+                options);
+            fetchRes.then(res =>
+                res.json()).then(d => {
+                    console.log(d);
+                    console.log(d.token);
+                    window.localStorage.setItem('auth_token', d.token);
+                })
+        }
+
+
+        function registerpostrequest() {
+
+            data = {
+                "username": document.getElementById("username2").value,
+                "password": document.getElementById("password2").value
+            }
+            let options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }
+
+            let fetchRes = fetch(
+                `${url}auth/signup/`,
+                options);
+            fetchRes.then(res =>
+                res.json()).then(d => {
+                    console.log(d);
+                    console.log(d.token);
+                    window.localStorage.setItem('auth_token', d.token);
+                })
+        }
+
+
+
+
+        function getrequest() {
+
+            data = window.localStorage.getItem('auth_token');
+
+            console.log(data);
+
+            let options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${data}`
+                }
+            }
+
+            let fetchRes = fetch(
+                `${url}auth/`,
+                options);
+
+            fetchRes.then(res =>
+                res.json()).then(d => {
+                    console.log(d);
+                })
+        }
+
+
+        function logout() {
+            data = window.localStorage.getItem('auth_token');
+
+            console.log(data);
+
+            let options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${data}`
+                }
+            }
+
+            let fetchRes = fetch(
+                `${url}auth/logout/`,
+                options);
+
+            fetchRes.then(res =>
+                res.json()).then(d => {
+                    console.log(d)
+                })
+        }
+    </script>
+</body>
+
+</html>

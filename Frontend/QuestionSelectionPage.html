@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
+
+    <title>Somaiya-QGen</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg red-med p-2">
+        <div class="container-fluid">
+
+            <button class="navbar-brand text-white fw-bold red-med border-0 disabled" type="button"
+                data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar">Somaiya-QGen</button>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title text-black" id="offcanvasNavbarLabel">Somaiya-QGen</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="nav flex-column">
+                        <a class="nav-link  red-text" aria-current="page" href="#">Home</a>
+                        <a class="nav-link red-text" href="#">Profile</a>
+                        <a class="nav-link red-text" href="#">Connect</a>
+                    </nav>
+
+                </div>
+
+            </div>
+            <form class="d-flex pe-3">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
+                <button class="btn btn-outline-success btn-close-white disabled" type="submit">Search</button>
+            </form>
+    </nav>
+    <div id="question-container"></div>
+
+    <div class="row justify-content-center">
+        <button type="button" class="btn blu-prim m-3 col-2 text-white" onclick="postQuest()">Post the Questions</button>
+    </div>
+
+    <script>
+
+        // USE THIS FOR API
+        
+        //let apiUrl = "http://127.0.0.1:8000/";
+        //
+        //    const url = `${apiUrl}/questions/`;
+        //    token = window.localStorage.getItem('auth_token');
+        //    const other_params = {
+        //            method: "POST",
+        //            mode: "cors",
+        //            headers: {
+        //                'Content-Type': 'application/json',
+        //                'Authorization': `Token ${token}`
+        //            },
+        //            body: JSON.stringify(data)
+        //    }
+
+
+        var selected = {
+            "mcq": [],
+            "bt": [],
+        };
+        var data = {
+    "mcqs": {
+        "1": {
+            "question": "It does this by using  _______  algorithms to identify what is deemed knowledge.The Knowledge Discovery in Databases is considered as a programmed, exploratory analysis and modeling of vast data repositories.KDD is the organized procedure of recognizing valid, useful, and understandable patterns from huge and complex data sets.",
+            "choices": [
+                "Administrative Data Processing",
+                "Data Mining",
+                "Data mining",
+                "Automatic Data Processing"
+            ],
+            "correct_option": "",
+            "More Options": [
+                "Distributed Data Processing",
+                "List Processing",
+                "Multiprocessing",
+                "Operation",
+                "Priority Processing",
+                "Real-time Processing",
+                "Serial Processing",
+                "Word Processing"
+            ]
+        },
+        "2": {
+            "question": "It does this by using Data Mining algorithms to identify what is deemed knowledge.The Knowledge Discovery in  _______  is considered as a programmed, exploratory analysis and modeling of vast data repositories.KDD is the organized procedure of recognizing valid, useful, and understandable patterns from huge and complex data sets.",
+            "choices": [
+                "Course Of Study",
+                "Ammunition",
+                "Confirmation",
+                "Databases"
+            ],
+            "correct_option": "",
+            "More Options": [
+                "Database",
+                "Details",
+                "Evidence",
+                "Fact",
+                "Factoid",
+                "Format",
+                "Gen",
+                "Insider Information",
+                "Intelligence",
+                "Material",
+                "Misinformation",
+                "News",
+                "Nuts And Bolts",
+                "Propaganda",
+                "Readout",
+                "Report Card"
+            ]
+        }
+    },
+    "bt1": {
+        "1": "What is kdd",
+        "2": "Define knowledge discovery",
+        "3": "Explain in brief data mining",
+        "4": "Explain in brief databases",
+        "5": "Explain in brief active data mining"
+    }
+}
+     
+    renderQuestions();
+
+    function renderQuestions(){
+        var mcqs = data.mcqs;
+        var bt1 = data.bt1;
+        var html_str = '';
+        for(var i in mcqs){
+            var curr = mcqs[i];
+
+            var choices_str = '';
+
+            for (var j in curr['choices']){
+                var curr_choice = curr['choices'][j];
+                choices_str += `<div class="row py-1 px-1">
+                    => ${curr_choice}
+                </div>`;
+                
+            }
+            html_str += `    <div class="card mx-5 my-3 py-2 px-3">
+        <div id=mcq_card${i} class="row p-2">
+            <div class="col-11">
+                <div class="row py-2 px-1">
+                    ${curr.question}
+                </div>
+                ${choices_str}
+            </div>
+            <div class="col-1 flex-column">
+                <div class="row py-2 px-1 mb-5">
+                    <button type="button" class="btn"><i class="bi bi-check2-circle" onclick="selectQuestion(${i},0,this)"
+                            style="font-size: 20px;"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div> `;
+        }
+        
+        for (var j in bt1){
+            var curr_bt = bt1[j];
+            html_str += `<div class="card mx-5 my-3 py-2 px-3">
+        <div id=quest_card${j} class="row p-2">
+            <div class="col-11">
+                <div class="row py-2 px-1">
+                    ${curr_bt}
+                </div>
+            </div>
+            <div class="col-1 flex-column">
+                <div class="row py-2 px-1 mb-5">
+                    <button type="button" class="btn"><i class="bi bi-check2-circle" onclick="selectQuestion(${j},1,this)"
+                            style="font-size: 20px;"></i></button>
+                </div>
+            </div>
+        </div>
+    </div> `
+        }
+        document.getElementById("question-container").innerHTML = html_str;
+    }
+
+    function selectQuestion(id,type,ele){
+        console.log(ele)
+
+        
+        if (type==0){
+            if (selected.mcq.includes(id)){
+                selected.mcq.splice(selected.mcq.indexOf(id),1);
+                ele.style.color = "black";
+                document.getElementById("mcq_card"+id).style.border = "";
+
+
+            }
+            else{
+                selected.mcq.push(id);
+                ele.style.color = "green";
+                document.getElementById("mcq_card"+id).style.border = "thick solid #46D2B2";
+
+            }
+        } else{
+            if (selected.bt.includes(id)){
+                selected.bt.splice(selected.bt.indexOf(id),1);
+                ele.style.color = "black";
+                document.getElementById("quest_card"+id).style.border = "";
+            }
+            else{
+                selected.bt.push(id);
+                ele.style.color = "green";
+                document.getElementById("quest_card"+id).style.border = "thick solid #46D2B2";
+            }
+
+        }
+        console.log(selected);
+    }
+
+    function postQuest(){
+        var data = {
+                "selected":""
+            }
+            const url = "https://b669-223-184-249-59.in.ngrok.io/addquestions/";
+
+            const other_params = {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+            }
+
+            fetch(url, other_params)
+                    .then(function (response) {
+
+                        if (response.ok) {
+
+                            console.log("Successful post");
+                            window.location.assign("LandingPage.html");
+    
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }
+                    )
+            
+    }
+    </script>
+
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
