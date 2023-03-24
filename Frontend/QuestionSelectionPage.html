@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="css.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,7 +31,7 @@
     <div id="question-container"></div>
 
     <div class="row justify-content-center">
-        <button type="button" class="btn blu-prim m-3 col-2 text-white">Post the Questions</button>
+        <button type="button" class="btn blu-prim m-3 col-2 text-white" onclick="postQuest()">Post the Questions</button>
     </div>
 
     <script>
@@ -66,7 +69,7 @@
             for (var j in curr['choices']){
                 var curr_choice = curr['choices'][j];
                 choices_str += `<div class="row py-1 px-1">
-                    A] ${curr_choice}
+                    => ${curr_choice}
                 </div>`;
                 
             }
@@ -142,6 +145,37 @@
 
         }
         console.log(selected);
+    }
+
+    function postQuest(){
+        var data = {
+                "selected":""
+            }
+            const url = "https://b669-223-184-249-59.in.ngrok.io/addquestions/";
+
+            const other_params = {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+            }
+
+            fetch(url, other_params)
+                    .then(function (response) {
+
+                        if (response.ok) {
+
+                            console.log("Successful post");
+                            window.location.assign("LandingPage.html");
+    
+                        } else {
+                            throw new Error("Could not reach the API: " + response.statusText);
+                        }
+                    }
+                    )
+            
     }
     </script>
 

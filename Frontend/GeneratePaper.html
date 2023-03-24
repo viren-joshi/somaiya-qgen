@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Page</title>
+    
+    <link rel="stylesheet" href="css.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg red-med p-2">
+        <div class="container-fluid">
+
+            <button class="navbar-brand text-white fw-bold red-med border-0" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">Somaiya-QGen</button>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title text-black" id="offcanvasNavbarLabel">Somaiya-QGen</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" href="#">Bookmarks</a>
+                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="#">Connect</a>
+                        <a class="nav-link text-danger" onclick=logout() href="#">Logout</a>
+                    </nav>
+
+                </div>
+
+            </div>
+    </nav>
+
+    <div class="container">
+        <div class="row m-3">
+            <div class="card p-3" style="width:100%">
+                <h2 style="color: #650000;">End Sem Exam Template</h2>
+                <hr>
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">2 Marks Questions</div>
+                        Any Six Out of Eight
+                      </div>
+                      <span class="badge bg-danger rounded-pill">12</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">4 Marks Questions</div>
+                        Any Four Out of Six
+                      </div>
+                      <span class="badge bg-danger rounded-pill">16</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">8 Marks Questions</div>
+                        Any Two Out of Three
+                      </div>
+                      <span class="badge bg-danger rounded-pill">16</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">8 Marks Questions</div>
+                          Any Two Out of Three
+                        </div>
+                        <span class="badge bg-danger rounded-pill">16</span>
+                      </li>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">TOTAL MARKS</div>
+                        </div>
+                        <span class="badge bg-success rounded-pill">60</span>
+                    </div>
+                </ol>
+                <button class="btn btn-outline-primary col-auto m-3" type="button" onclick="goTo()"> Generate Question Paper</button>
+            </div>
+            <div class="card p-3 mt-5" style="width:100%">
+                <h2 style="color: #650000;">Term Test Exam Template</h2>
+                <hr>
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">5 Marks Questions</div>
+                        Both Compulsory
+                      </div>
+                      <span class="badge bg-danger rounded-pill">10</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">10 Marks Questions</div>
+                        Any One Out of Two
+                      </div>
+                      <span class="badge bg-danger rounded-pill">10</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">10 Marks Questions</div>
+                          Any One Out of Two
+                        </div>
+                        <span class="badge bg-danger rounded-pill">10</span>
+                      </li>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold">TOTAL MARKS</div>
+                        </div>
+                        <span class="badge bg-success rounded-pill">30</span>
+                    </div>
+                </ol>
+                <button class="btn btn-outline-primary col-auto m-3" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="generateModules()"> Generate Question Paper</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Choose Modules</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="modal-body-content"></div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Generate Paper</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+        
+    
+    
+
+    const apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/"
+
+    token = window.localStorage.getItem('auth_token');
+        console.log(token);
+        let options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+            }
+        }
+    
+    function goTo(){
+        window.location.href = "QuestionPaper.html";
+    }
+    function generateModules(){
+        document.getElementById('modal-body-content').innerHTML = "";
+        fetch(apiUrl + 'modules/', options)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            let modules = data;
+            let modalBody = document.getElementById('modal-body-content');
+            for (let i = 0; i < modules.length; i++) {
+                let module = modules[i];
+                let moduleDiv = document.createElement('form');
+                moduleDiv.className = "form-check";
+                let moduleInput = document.createElement('input');
+                moduleInput.className = "form-check-input";
+                moduleInput.type = "checkbox";
+                moduleInput.value = module.id;
+                moduleInput.id = module.id;
+                let moduleLabel = document.createElement('label');
+                moduleLabel.className = "form-check-label";
+                moduleLabel.htmlFor = module.id;
+                moduleLabel.innerText = module.name;
+                moduleDiv.appendChild(moduleInput);
+                moduleDiv.appendChild(moduleLabel);
+                modalBody.appendChild(moduleDiv);
+            }
+        })
+    }
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+crossorigin="anonymous"></script>
+</html>
