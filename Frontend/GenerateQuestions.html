@@ -19,55 +19,41 @@
 
 <body>
     <nav class="navbar navbar-expand-lg red-med p-2">
-        <div class="container-fluid">
-
-            <button class="navbar-brand text-white fw-bold red-med border-0" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">Somaiya-QGen</button>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title text-black" id="offcanvasNavbarLabel">Somaiya-QGen</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <nav class="nav flex-column">
-                        <a class="nav-link  red-text" aria-current="page" href="#">Home</a>
-                        <a class="nav-link red-text" href="#">Profile</a>
-                        <a class="nav-link red-text" href="#">Connect</a>
-                    </nav>
-
-                </div>
-
-            </div>
-            <form class="d-flex pe-3">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
-                <button class="btn btn-outline-success btn-close-white disabled" type="submit">Search</button>
-            </form>
+        <div class="d-flex justify-content-center">
+            <div class="navbar-brand text-white fw-bold red-med border-0">Somaiya-QGen</div>
+            <i class="navbar-brand bi bi-dot mv-3" style="color:white; height: 20; width: 20;"></i>
+            <div class="navbar-brand text-white red-med border-0 ">Generate Questions</div>
+        </div>
     </nav>
 
-    <div class="alert alert-warning mx-5 my-3" role="alert">
-        Please input a paragraph with minimum of 500-4000 words for better and accurate questions.
+    <div id="ui">
+        <div class="alert alert-warning mx-5 my-3" role="alert">
+            Please input a paragraph with minimum of 500-4000 words for better and accurate questions.
+        </div>
+    
+        <div class="input-group pt-4 px-5">
+            <textarea class="form-control" aria-label="With textarea" id="input_paragraph"placeholder="Enter your paragraph"
+                style="height: 100px;"></textarea>
+        </div>
+    
+        <div class="row justify-content-center">
+            <button type="button" class="btn blu-prim m-3 col-2 text-white" onclick="createQuestions()">Generate
+                Questions</button>
+        </div>
     </div>
-
-    <div class="input-group pt-4 px-5">
-        <textarea class="form-control" aria-label="With textarea" id="input_paragraph"placeholder="Enter your paragraph"
-            style="height: 100px;"></textarea>
-    </div>
-
-    <div class="row justify-content-center">
-        <button type="button" class="btn blu-prim m-3 col-2 text-white" onclick="createQuestions()">Generate
-            Questions</button>
-    </div>
+    
 
     <script>
-        function createQuestions() {
-            let apiUrl = "http://127.0.0.1:8000/";
+        let apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/";
+        var enteredParagraph = '';
+        selected_questions = [];
 
+        function createQuestions() {
+            enteredParagraph = document.getElementById("input_paragraph").value;
             var data = {
-                "paragraph": document.getElementById("input_paragraph").value
+                "paragraph": enteredParagraph,
             }
-            const url = `${apiUrl}/generatemcq/`;
+            const url = `${apiUrl}ai/generatefrompara/`;
             token = window.localStorage.getItem('auth_token');
             const other_params = {
                     method: "POST",
@@ -81,18 +67,235 @@
 
             fetch(url, other_params)
                     .then(function (response) {
-                        console.log(response)
-                        if (response.ok) {
-                            console.log("Successful post");
-                            window.location.assign("QuestionSelectionPage.html");
-    
-                        } else {
-                            throw new Error("Could not reach the API: " + response.statusText);
+                            console.log(response);
+                            if (response.ok) {
+                                console.log("Successful post");
+                                // window.location.assign("QuestionSelectionPage.html");
+                                return response.json();
+        
+                            } else {
+                                throw new Error("Could not reach the API: " + response.statusText);
+                            }
                         }
-                    }
-                    )
+                    ).then((response) => {
+                        console.log(response);
+                        render_questions(response);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+            // questions = {
+            //     "Remember": "What are the advantages of different types of operating systems?",
+            //     "Understand": "Explain different types of operating systems.",
+            //     "Apply": "How can I categorize different types of operating systems?",
+            //     "Analyse": "Compare and contrast different types of operating systems.",
+            //     "Evaluate": "Assess the advantages of different types of operating systems.",
+            //     "Create": "Design a new type of operating system based on the following terms: Batch Operating System, Time-Sharing Operating System, Mobile Operating System, etc."
+            // }
+            // render_questions();
             
         }
+
+
+        function render_questions(questions){
+            let ui = document.getElementById("ui");
+            var innerHTML = "";
+            count=0;
+            for (var key in questions){
+                innerHTML+= `
+
+    </div>
+                <div class="card mx-5 my-2 px-2 red-text">
+                    <div class="row d-flex justify-content-center w-100 p-2">
+
+                </div>
+                    <div class="row w-100 p-2">
+                        <div class="col-11">
+                            <h5 align="left">${key}</h5>
+                        </div>
+                        <div class="col-1">
+                            <input type="checkbox" class="form-check-input" id="checkbox-${count}" name="question-check-box"></div>
+                    </div>
+                    <div class="row w-100 p-2">
+                        <label for="question-text-input-${count}">Question</label>
+                        <input  type="text" class="form-control w-75" id="question-text-input-${count}" value="${questions[key]}">
+                    </div>
+                    <div class="row w-100 p-2">
+                        <div class="col-1">Marks : </div>
+                        <input type="text" class="form-control w-25 col-10" id="marks-text-input-${count}" value="">
+                    </div>
+                    <hr class="red-med p-0 m-0">
+                    
+                    <div class="row d-flex justify-content-between w-100 p-2">
+                    </div>
+                </div>
+                `;
+                count++;
+            }
+            innerHTML = `
+            <div class="container mx-auto d-flex text-center">
+                <div class="row justify-content-evenly w-100 my-3 mx-2">
+                    <div class="btn-grp col-auto dropdown">
+                        <button  id="facultyCoursesButton" class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" onclick="getFacultyCourses(false)">Choose Subject </button>
+                        <div class="dropdown-menu" id="facultyCourseDropdown">
+                        </div>
+                    </div>
+                    <div class="btn-grp col-auto dropdown">
+                        <button id="facultyModulesButton" class="btn btn-outline dropdown-toggle grey-outln-btm " type="button" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Choose Module </button>
+                        <div class="dropdown-menu" id="facultyModuleDropdown">
+                        </div>
+                    </div>
+                </div>
+            ` + innerHTML + `
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn blu-prim text-white m-5" onclick="postQuestions()">Save changes</button>    
+            </div>
+            
+            `;
+            ui.innerHTML = innerHTML;
+            var checkboxes = document.querySelectorAll("input[type=checkbox][name=question-check-box]");
+            for(var index=0;index<checkboxes.length;index++){
+                checkbox = checkboxes[index];
+                console.log("eventlistener added");
+                checkbox.addEventListener('change', () => {
+                    selected_questions = Array.from(checkboxes) // Convert checkboxes to an array to use filter and map.
+                        .filter(i => i.checked) // Use Array.filter to remove unchecked checkboxes.
+                        .map(ind => ind.id.split("-")[1]); // Use Array.map to extract the checkbox's value (via its id
+                });
+            }
+
+            // listening to the checkboxes
+
+            // listening to the text inputs and adding values to it
+            
+        }
+
+
+        function getFacultyCourses(isModal){
+            let options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+                }
+            }
+            fetch(`${apiUrl}/courses/`,options).then( (response) => response.json()).then( function (courses){
+                allCourses = courses;
+                var courses_str = '';
+                courses.forEach(element => {
+                    console.log(element);
+                    courses_str +=`
+                        <div class="dropdown-item" onclick=getFacultyModules(${element["id"]},${isModal}) id="subject-${element["id"]}">${element['name']}</div>
+                    `
+                });
+
+                // console.log(courses_str);
+
+                document.getElementById(isModal ? 'modalFacultyCourseDropdown':'facultyCourseDropdown').innerHTML = courses_str;
+                
+            })
+        }
+
+        function getFacultyModules(courseId,isModal){
+
+
+        let options = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Token ${token}`
+            }
+        }
+
+        console.log(courseId);
+
+        for (var k in allCourses){
+            if (allCourses[k]['id']==courseId){
+                if(isModal)
+                    document.getElementById("modalFacultyCoursesButton").innerText = allCourses[k]['name'];
+                else
+                    document.getElementById("facultyCoursesButton").innerText = allCourses[k]['name'];
+            }
+        }
+        selectedCourseId = courseId;
+
+
+        // fetch(`${apiUrl}?course_id=${courseId}`, options).then( (response) => response.json()).then
+        // getQuestions();
+
+        fetch(`${apiUrl}courses/?id=${courseId}`,options).then( (response) => response.json()).then( function (modules){
+            var modules_str = '';
+
+            allModules = modules;
+            for(var i in modules){
+                curr = modules[i];
+                modules_str +=`
+                    <div class="dropdown-item" onclick=setModuleValue(${curr["id"]},${isModal}) id="modules-${curr["id"]}">${curr['name']}</div>
+                `
+            }
+
+            document.getElementById(isModal ? 'modalFacultyModuleDropdown':'facultyModuleDropdown').innerHTML = modules_str;
+
+        })
+        
+    };
+
+    function setModuleValue(moduleId,isModal){
+            for (var k in allModules){
+                if (allModules[k]['id']==moduleId){
+                    document.getElementById("facultyModulesButton").innerText = allModules[k]['name'];
+                }
+            }
+            selectedModuleId = moduleId;
+
+    }
+
+    function postQuestions() {
+        data = [];
+        
+    
+        for(var i=0; i<selected_questions.length;i++){
+            marks = document.getElementById(`marks-text-input-${selected_questions[i]}`).value;
+            if(marks == ""){
+                alert("Please enter marks for all the questions");
+                return;
+            }
+            data.push({
+                "question": document.getElementById(`question-text-input-${selected_questions[i]}`).value,
+                "marks": document.getElementById(`marks-text-input-${selected_questions[i]}`).value,
+                "module_id": selectedModuleId,
+                "answer": enteredParagraph,
+                "BT_level" : selected_questions[i],
+            });
+        }
+        var options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify(data)
+        }
+
+        fetch(`${apiUrl}ai/`, options).then( (response) => response.json()).then( function (data){
+            console.log(data);
+            if(data["message"] == "Success"){
+                alert("Questions added successfully");
+                window.location.href = "LandingPageTeacher.html";
+            } else {
+                alert("Error adding questions");
+            }
+        })
+    
+    }
+    
+
+
     </script>
 
     <!-- Optional JavaScript; choose one of the two! -->

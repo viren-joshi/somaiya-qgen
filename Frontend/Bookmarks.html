@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
+
+    <title>QGen</title>
+</head>
+
+
+<body>
+    <nav class="navbar navbar-expand-lg red-med p-2">
+        <div class="d-flex justify-content-center">
+            <div class="navbar-brand text-white fw-bold red-med border-0">Somaiya-QGen</div>
+            <i class="navbar-brand bi bi-dot mv-3" style="color:white; height: 20; width: 20;"></i>
+            <div class="navbar-brand text-white red-med border-0 ">Bookmarks</div>
+        </div>
+    </nav>
+    <div id="question-container"></div>
+
+
+    <script>
+
+        const url = "https://90b1-182-48-213-190.in.ngrok.io/";
+
+        token = window.localStorage.getItem("auth_token");
+        let options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+            }
+        }
+
+        getBookmarks();
+
+        function getBookmarks() {
+            var bkmkUrl = url + "bookmarks/";
+            fetch(bkmkUrl,options).then((response) => {
+                if (response.status == 401){
+                    alert("You need to login first.");
+                    window.location.href = "LoginPage.html";
+                };
+                return response.json();
+            }).then(response => {
+                console.log(response);
+                render_questions(response);
+            })
+        }
+
+        function render_questions(question_data) {
+            question_str = '';
+            var count = 0;
+            for (var i in question_data) {
+                count++;
+                var curr = question_data[i];
+                attach_str = ``;
+
+                if (curr['upvoted']==true){
+                    upvote_str = `<i class="bi bi-hand-thumbs-up-fill col-1" onclick="upvoteQuestion(${curr['post']['id']})" id="upvote-${curr['post']['id']}"></i> `
+                } else {
+                    upvote_str = `<i class="bi bi-hand-thumbs-up col-1" onclick="upvoteQuestion(${curr['post']['id']})" id="upvote-${curr['post']['id']}"></i> `
+                }
+
+                if (curr['bookmarked']==true){
+                    bkmk_str = `<i class="bi bi-bookmark-fill col-1" onclick="bookmarkQuestion(${curr['post']['id']})" id="bkmk-${curr['post']['id']}"></i>`
+                } else {
+                    bkmk_str = `<i class="bi bi-bookmark col-1" onclick="bookmarkQuestion(${curr['post']['id']})" id="bkmk-${curr['post']['id']}"></i>`
+                }
+
+                if (curr['flagged']==true){
+                    flag_str = `<i class="bi bi-flag-fill col-1" onclick="flagQuestion(${curr['post']['id']})" id="flag-${curr['post']['id']}"></i>`
+                } else {
+                    flag_str = `<i class="bi bi-flag col-1" onclick="flagQuestion(${curr['post']['id']})" id="flag-${curr['post']['id']}"></i>`
+                }
+                question_str += `
+                <div class="card mx-5 my-2 px-2 red-text">
+                    <div class="row d-flex justify-content-center w-100 p-2">
+                                <div class="me-auto col-sm-2 col-md-2 col-lg-1">${flag_str}</div>
+                                
+                                <div class="col-sm-2 col-md-2 col-lg-1 m-1 badge red-med text-white">
+                                    BT-Level ${curr['post']['BT_level']}
+                                </div>
+                                <div class="col-sm-2 col-md-2 col-lg-1 m-1 badge red-med text-white">
+                                  Marks:  +${curr['post']['marks']}
+                                </div>
+
+                    </div>
+                    <div class="row w-100 p-2">
+                        <h5>Question No. ${count}</h5>
+                    </div>
+                    <div class="row w-100 p-2">
+                        <p>${curr['post']['question']}</p>
+                    </div>
+                    ${attach_str}
+                    <hr class="red-med p-0 m-0">
+                    <div class="row w-100 p-2">
+                        <p>${curr['post']['answer']}</p>
+                    </div>
+                    <div class="row d-flex justify-content-between w-100 p-2">
+                        ${upvote_str}
+                        ${bkmk_str}
+                    </div>
+                </div>
+                `;
+            }
+            // console.log(question_str);
+            document.getElementById("question-container").innerHTML = question_str;
+        }
+
+
+    </script>
+
+
+
+</body>

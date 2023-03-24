@@ -19,32 +19,11 @@
 
 <body>
     <nav class="navbar navbar-expand-lg red-med p-2">
-        <div class="container-fluid">
-
-            <button class="navbar-brand text-white fw-bold red-med border-0 disabled" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar">Somaiya-QGen</button>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title text-black" id="offcanvasNavbarLabel">Somaiya-QGen</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <nav class="nav flex-column">
-                        <a class="nav-link  red-text" aria-current="page" href="#">Home</a>
-                        <a class="nav-link red-text" href="#">Profile</a>
-                        <a class="nav-link red-text" href="#">Connect</a>
-                    </nav>
-
-                </div>
-
-            </div>
-            <form class="d-flex pe-3">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" disabled>
-                <button class="btn btn-outline-success btn-close-white disabled" type="submit">Search</button>
-            </form>
+        <div class="d-flex justify-content-center">
+            <div class="navbar-brand text-white fw-bold red-med border-0">Somaiya-QGen</div>
+            <i class="navbar-brand bi bi-dot mv-3" style="color:white; height: 20; width: 20;"></i>
+            <div class="navbar-brand text-white red-med border-0 ">Generate Questions</div>
+        </div>
     </nav>
     <div id="question-container"></div>
 
@@ -71,69 +50,8 @@
         //    }
 
 
-        var selected = {
-            "mcq": [],
-            "bt": [],
-        };
-        var data = {
-    "mcqs": {
-        "1": {
-            "question": "It does this by using  _______  algorithms to identify what is deemed knowledge.The Knowledge Discovery in Databases is considered as a programmed, exploratory analysis and modeling of vast data repositories.KDD is the organized procedure of recognizing valid, useful, and understandable patterns from huge and complex data sets.",
-            "choices": [
-                "Administrative Data Processing",
-                "Data Mining",
-                "Data mining",
-                "Automatic Data Processing"
-            ],
-            "correct_option": "",
-            "More Options": [
-                "Distributed Data Processing",
-                "List Processing",
-                "Multiprocessing",
-                "Operation",
-                "Priority Processing",
-                "Real-time Processing",
-                "Serial Processing",
-                "Word Processing"
-            ]
-        },
-        "2": {
-            "question": "It does this by using Data Mining algorithms to identify what is deemed knowledge.The Knowledge Discovery in  _______  is considered as a programmed, exploratory analysis and modeling of vast data repositories.KDD is the organized procedure of recognizing valid, useful, and understandable patterns from huge and complex data sets.",
-            "choices": [
-                "Course Of Study",
-                "Ammunition",
-                "Confirmation",
-                "Databases"
-            ],
-            "correct_option": "",
-            "More Options": [
-                "Database",
-                "Details",
-                "Evidence",
-                "Fact",
-                "Factoid",
-                "Format",
-                "Gen",
-                "Insider Information",
-                "Intelligence",
-                "Material",
-                "Misinformation",
-                "News",
-                "Nuts And Bolts",
-                "Propaganda",
-                "Readout",
-                "Report Card"
-            ]
-        }
-    },
-    "bt1": {
-        "1": "What is kdd",
-        "2": "Define knowledge discovery",
-        "3": "Explain in brief data mining",
-        "4": "Explain in brief databases",
-        "5": "Explain in brief active data mining"
-    }
-}
+        
+        
     renderQuestions();
 
     function renderQuestions(){

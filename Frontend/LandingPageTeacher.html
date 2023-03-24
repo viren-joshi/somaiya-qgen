@@ -22,11 +22,14 @@
     <!-- Drawer -->
     <nav class="navbar navbar-expand-lg red-med p-2">
         <div class="container-fluid">
-
-            <button class="navbar-brand text-white fw-bold red-med border-0" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">Somaiya-QGen</button>
+            <button class="navbar-brand red-med fw-bold border-0" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <i class="bi bi-list" style="color:white"></i>
+            </button>
+            <div class="navbar-brand text-white fw-bold red-med border-0">Somaiya-QGen</div>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
+
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title text-black" id="offcanvasNavbarLabel">Somaiya-QGen</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
@@ -35,9 +38,9 @@
                 <div class="offcanvas-body">
                     <nav class="nav flex-column">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        <a class="nav-link" href="#">Bookmarks</a>
-                        <a class="nav-link" href="#">Profile</a>
-                        <a class="nav-link" href="#">Connect</a>
+                        <a class="nav-link" href="Bookmarks.html">Bookmarks</a>
+                        <!-- <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="#">Connect</a> -->
                         <a class="nav-link text-danger" onclick=logout() href="#">Logout</a>
                     </nav>
 
@@ -160,7 +163,7 @@
 
 
     <script>
-        let apiUrl = "https://f84d-182-48-210-159.in.ngrok.io/";
+        let apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/";
 
         token = window.localStorage.getItem('auth_token');
         console.log(token);
@@ -273,7 +276,7 @@
                                   Marks:  +${curr['marks']}
                                 </div>
 
-                    </div>
+                </div>
                     <div class="row w-100 p-2">
                         <h5>Question No. ${count}</h5>
                     </div>
@@ -345,77 +348,77 @@
                     })
             }
         
-        function postAQuestion(){
-
-            // ---------
-
+        function postAQuestion() {
             token = window.localStorage.getItem('auth_token');
 
             let fileElement = document.getElementById('inputGroupFile');
             
-
-            // check if user had selected a file
-            if (fileElement.files.length === 0) {
-                alert('please choose a file')
+            var question = document.getElementById("questionInput").value;
+            var answer = document.getElementById("answerInput").value;
+            var marks = document.getElementById("marksInput").value;
+            
+            if(answer.length==0 || marks.length==0){
+                alert('All fields are required!')
                 return
             }
 
-            let file = fileElement.files[0]
 
-            let formData = new FormData();
-            formData.set('file', file);
-            
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Token ${token}`
-              }
-            // import js script for using axios
-            axios.post(`${apiUrl}uploadfile/`, formData, {
-                onUploadProgress: progressEvent => {
-                    const percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
-                    console.log(`upload process: ${percentCompleted}%`);
-                },headers:headers
-            })
-                .then(res => {
-                    console.log(res.data);
-                    
-                    data = {
-                        "question": document.getElementById("questionInput").value,
-                        "answer": document.getElementById("answerInput").value,
+            data = {
+                        "question": question,
+                        "answer": answer,
                         "BT_level": selectedBTLevel,
-                        "course": selectedCourseId,
-                        "module": selectedModuleId,
-                        "q_file": res.data['slug'],
-                        "q_image": '',
-                    }
-                    
-                    let options = {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': `Token ${token}`
-                        },
-                        body: JSON.stringify(data)
-                    }
+                        "module_id": selectedModuleId,
+                        "marks": marks,
+                        "questionFile": null
+            }
 
-                    let fetchRes = fetch(
-                        `${apiUrl}questions/`,
-                        options);
-                    fetchRes.then(res =>
-                        res.json()).then(d => {
-                            console.log(d);
-                            getQuestions();
-                        })
-                })
+            if (fileElement.files.length === 0 && question.length === 0) {
+                alert('Please choose a file! or Enter a question.')
+                return
+            }
 
-                // ----------
+            if(fileElement.files.length===1){
+                let file = fileElement.files[0]
+                let formData = new FormData();
+                formData.set('file', file);
+                
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+                }
 
+                var res = axios.post(`${apiUrl}upload/`, formData, {
+                    onUploadProgress: progressEvent => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        console.log(`upload process: ${percentCompleted}%`);
+                    },headers:headers
+                });
+                console.log(res.data);
+                data["q_file"] = res.data['slug'];
+            }
 
             
+                    
+            let options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify(data)
+            }
+
+            fetch(
+                `${apiUrl}`,
+                options).then(res =>
+                res.json()).then(d => {
+                    console.log(d);
+                    getQuestions();
+                })
         }
 
         function getFacultyModules(courseId,isModal){
@@ -474,7 +477,7 @@
 
         function upvoteQuestion(id) {
             var thumb = document.getElementById(`upvote-${id}`);
-            var url = `${apiUrl}/alter/`;
+            var url = `${apiUrl}alter/`;
             var isUpVoted = thumb.classList.contains('bi-hand-thumbs-up-fill');
             if(isUpVoted) {
                 url+=`downvote/${id}`;
@@ -558,7 +561,7 @@
 
         function bookmarkQuestion(id){
             var thumb = document.getElementById(`bkmk-${id}`);
-            var url = `${apiUrl}/alter/`;
+            var url = `${apiUrl}alter/`;
 
             var isBookmarked = thumb.classList.contains('bi bi-bookmark-fill');
             if(isBookmarked){
