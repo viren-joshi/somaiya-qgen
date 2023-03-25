@@ -1,8 +1,8 @@
 from transformers import T5Tokenizer, T5ForConditionalGeneration,T5Model
 import torch
 
-model = T5ForConditionalGeneration.from_pretrained("C:\\Users\\taaha\\OneDrive\\Desktop\\AQPG_NEW\\save_model")
-tokenizer = T5Tokenizer.from_pretrained("C:\\Users\\taaha\\OneDrive\\Desktop\\AQPG_NEW\\save_model")
+model = T5ForConditionalGeneration.from_pretrained("C:\\Users\\taaha\\OneDrive\\Desktop\\Recent\\somaiya-qgen\\AQPG_NEW\\save_model")
+tokenizer = T5Tokenizer.from_pretrained("C:\\Users\\taaha\\OneDrive\\Desktop\\Recent\\somaiya-qgen\\AQPG_NEW\\save_model")
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model.to(device)
 
