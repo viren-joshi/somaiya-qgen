@@ -3,6 +3,7 @@ name: Ping model API every 36 hours
 on:
   schedule:
     - cron: "0 */36 * * *"
+  workflow_dispatch:
 
 jobs:
   ping_api:
