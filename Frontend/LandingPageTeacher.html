@@ -343,14 +343,17 @@
                     }
                 }
     
-                let fetchRes = fetch(
-                    `${apiUrl}auth/logout/`,
-                    options);
-    
-                fetchRes.then(res =>
-                    res.json()).then(d => {
-                        console.log(d)
-                    })
+                if (confirm("Are you sure you want to logout?")){
+                fetch(apiUrl+"auth/logout",options).then(function(response) {
+                    if (response.ok && response.status==200){
+                        window.location.assign("LoginPage.html");
+                    }
+                }).catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+            } else {
+                // do nothing
+            }
             }
         
         function postAQuestion() {
