@@ -84,8 +84,10 @@
     </div>
     </div>
 </body>
-<script>
-    const apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/ai/generate/endsem/"
+<script type="module">
+    import {myUrl} from './constants.js';
+
+    const apiUrl = myUrl + "ai/generate/endsem/";
     var quest_data;
     token = window.localStorage.getItem('auth_token');
         console.log(token);

@@ -46,8 +46,10 @@
     </div>
     
 
-    <script>
-        let apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/";
+    <script type="module">
+        import {myUrl} from './constants.js';
+        
+        let apiUrl = myUrl;
         var enteredParagraph = '';
         selected_questions = [];
 

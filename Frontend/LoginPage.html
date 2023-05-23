@@ -14,7 +14,7 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
     <script src="https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
-
+    
     <title>QGen</title>
 </head>
 
@@ -99,8 +99,11 @@
             </div>
         </div>
 
-        <script>
-            const url = "https://90b1-182-48-213-190.in.ngrok.io/"
+        <script type="module">
+            import {myUrl} from './constants.js'
+
+            console.log(myUrl);
+            const myUrl = "https://90b1-182-48-213-190.in.ngrok.io/"
     
             function login(t) {
                 var username;
