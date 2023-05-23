@@ -103,7 +103,7 @@
             import {myUrl} from './constants.js'
 
             console.log(myUrl);
-            const myUrl = "https://90b1-182-48-213-190.in.ngrok.io/"
+            const url = myUrl;
     
             function login(t) {
                 var username;
@@ -117,11 +117,12 @@
                     password = document.getElementById("expertPassword").value;
                 }
 
-                data = {
+                var data = {
                     "username": username,
                     "password": password,
                     "type":t
                 }
+                window.data = data;
                 console.log(data);
                 let options = {
                     method: 'POST',
@@ -155,7 +156,7 @@
                         
                     })
             }
-
+            window.login = login;
 
 
             
@@ -185,6 +186,7 @@
                         console.log(d);
                     })
             }
+            window.check = check;
     
         </script>
 
