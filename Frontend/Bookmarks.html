@@ -27,9 +27,10 @@
     <div id="question-container"></div>
 
 
-    <script>
+    <script type="module">
+        import {myUrl} from './constants.js';
 
-        const url = "https://3589-223-189-15-181.ngrok-free.app/";
+        const url = myUrl;
 
         token = window.localStorage.getItem("auth_token");
         let options = {

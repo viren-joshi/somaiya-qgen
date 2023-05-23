@@ -51,8 +51,10 @@
     <div id="question-container"></div>
 
 </body>
-<script>
-    const apiUrl = "https://3589-223-189-15-181.ngrok-free.app/"
+<script type="module">
+    import {myUrl} from './constants.js';
+
+    const apiUrl = myUrl
 
     token = window.localStorage.getItem('auth_token');
         console.log(token);

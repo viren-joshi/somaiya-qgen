@@ -87,9 +87,11 @@
         <button class="btn btn-outline-primary col-auto m-3" type="button" onclick="download()"> Download</button>
     </div>
     </div>
-<script>
-    
-    const apiUrl = "https://3589-223-189-15-181.ngrok-free.app/ai/generate/endsem/"
+</body>
+<script type="module">
+    import {myUrl} from './constants.js';
+
+    const apiUrl = myUrl + "ai/generate/endsem/";
     var quest_data;
     token = window.localStorage.getItem('auth_token');
         console.log(token);
