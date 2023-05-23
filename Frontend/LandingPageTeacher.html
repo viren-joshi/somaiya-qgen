@@ -166,7 +166,7 @@
 
 
     <script>
-        let apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/";
+        let apiUrl = "https://3589-223-189-15-181.ngrok-free.app/";
 
         token = window.localStorage.getItem('auth_token');
         console.log(token);
@@ -341,14 +341,17 @@
                     }
                 }
     
-                let fetchRes = fetch(
-                    `${apiUrl}auth/logout/`,
-                    options);
-    
-                fetchRes.then(res =>
-                    res.json()).then(d => {
-                        console.log(d)
-                    })
+                if (confirm("Are you sure you want to logout?")){
+                fetch(apiUrl+"auth/logout",options).then(function(response) {
+                    if (response.ok && response.status==200){
+                        window.location.assign("LoginPage.html");
+                    }
+                }).catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+            } else {
+                // do nothing
+            }
             }
         
         function postAQuestion() {

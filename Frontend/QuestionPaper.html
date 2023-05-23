@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="css.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
@@ -70,10 +74,10 @@
         </div>
         <div class="row mt-5">
             <div class="col-6 p-4">
-                <h3 class="text-start">Class: TY COMP <br> Course Name: ABC <br> Course Code: CEDLC6053</h3>
+                <h3 class="text-start">Class: TY COMP <br> Course Name: Database Management System <br> Course Code: CEDLC6053</h3>
             </div>
             <div class="col-6 p-4">
-                <h3 class="text-end">Date: 23/03/2023<br>Marks: 30 <br>Time: 1 hr 30 mins</h3>
+                <h3 class="text-end">Date: 24/03/2023<br>Marks: 30 <br>Time: 1 hr 30 mins</h3>
             </div>
         </div>
 
@@ -83,9 +87,9 @@
         <button class="btn btn-outline-primary col-auto m-3" type="button" onclick="download()"> Download</button>
     </div>
     </div>
-</body>
 <script>
-    const apiUrl = "https://90b1-182-48-213-190.in.ngrok.io/ai/generate/endsem/"
+    
+    const apiUrl = "https://3589-223-189-15-181.ngrok-free.app/ai/generate/endsem/"
     var quest_data;
     token = window.localStorage.getItem('auth_token');
         console.log(token);
@@ -114,16 +118,14 @@
                     console.log(two_marks[i]);
                     var curr = two_marks[i];
                     quest_str += `
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-8">
-                            <input class="form-control" type="text" value="Q${count}. ${curr['question']}" aria-label="Disabled input example" disabled readonly>
+                            <textarea  class="form-control" type="text"  aria-label="Disabled input example">Q${count}. ${curr['question']}</textarea>
                         </div>
                         <div class="col-2">
                             <input class="form-control" type="text" value="2 Marks" aria-label="Disabled input example" disabled readonly>
                         </div>
-                        <div class="col-1">
-                            <i class="bi bi-pencil-square" style="font-size: x-large;"></i>
-                        </div>
+                        <div class="col-1"></div>
                         <div class="col-1">
                             <i class="bi bi-chat-left-dots-fill" style="font-size: x-large;"></i>
                         </div>
@@ -136,15 +138,14 @@
                     count++;
                     var curr = four_marks[j];
                     quest_str += `
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-8">
-                            <input class="form-control" type="text" value="Q${count}. ${curr['question']}" aria-label="Disabled input example" disabled readonly>
+                            <textarea  class="form-control" type="text"  aria-label="Disabled input example">Q${count}. ${curr['question']}</textarea>
                         </div>
                         <div class="col-2">
                             <input class="form-control" type="text" value="4 Marks" aria-label="Disabled input example" disabled readonly>
                         </div>
                         <div class="col-1">
-                            <i class="bi bi-pencil-square" style="font-size: x-large;"></i>
                         </div>
                         <div class="col-1">
                             <i class="bi bi-chat-left-dots-fill" style="font-size: x-large;"></i>
@@ -157,15 +158,14 @@
                     count++;
                     var curr = eight_marks[k];
                     quest_str += `
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-8">
-                            <input class="form-control" type="text" value="Q${count}. ${curr['question']}" aria-label="Disabled input example" disabled readonly>
+                            <textarea  class="form-control" type="text"  aria-label="Disabled input example">Q${count}. ${curr['question']}</textarea>
                         </div>
                         <div class="col-2">
                             <input class="form-control" type="text" value="8 Marks" aria-label="Disabled input example" disabled readonly>
                         </div>
                         <div class="col-1">
-                            <i class="bi bi-pencil-square" style="font-size: x-large;"></i>
                         </div>
                         <div class="col-1">
                             <i class="bi bi-chat-left-dots-fill" style="font-size: x-large;"></i>
@@ -178,15 +178,14 @@
                     count++;
                     var curr = eight_marks[k];
                     quest_str += `
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-8">
-                            <input class="form-control" type="text" value="Q${count}. ${curr['question']}" aria-label="Disabled input example" disabled readonly>
+                            <textarea  class="form-control" type="text"  aria-label="Disabled input example">Q${count}. ${curr['question']}</textarea>
                         </div>
                         <div class="col-2">
                             <input class="form-control" type="text" value="8 Marks" aria-label="Disabled input example" disabled readonly>
                         </div>
                         <div class="col-1">
-                            <i class="bi bi-pencil-square" style="font-size: x-large;"></i>
                         </div>
                         <div class="col-1">
                             <i class="bi bi-chat-left-dots-fill" style="font-size: x-large;"></i>
@@ -201,14 +200,25 @@
             .catch(error => {
                 console.log(error);
             })
+    
+    function download(){
         
-            function download(){
-                const element = document.getElementById('questions');
-                html2pdf().from(element).save();
+        // download entire div with all content as pdf using html2canvas
+        var element = document.getElementById('question-paper');
+        html2canvas(element).then(function(canvas) {
+            var imgData = canvas.toDataURL('image/png');
+            var doc = new jsPDF('p', 'mm', 'a4');
+            doc.addImage(imgData, 'PNG', 0, 0, 210, 297 );
+            doc.save('Question Paper.pdf');
+        });
 
-            }
+
+        
+
+    }
     
 </script>
+</body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

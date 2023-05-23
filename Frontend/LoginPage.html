@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="css.css">
@@ -27,13 +26,13 @@
             <div class="row mx-auto mt-md-2 mb-md-1 justify-content-center">
                 <h2 class="text-danger">Somaiya-QGen</h2>
             </div>
-            <div class="row mx-auto m-md-5 justify-content-center">
+            <div class="row mx-auto justify-content-center">
                 <!-- <div class="col-md-3"></div> -->
-                <div class="col-md-5 p-0">
+                <div class="col-12 col-md-6 p-0">
                     <div class="card m-0 shadow-lg">
                         <div class="row w-100 mx-auto border-bottom text-white" id="loginToggle">
                             <!-- <ul class="nav nav-tabs mx-auto" role="tablist"> -->
-                            <div class="col-6 border-end p-2 blu-prim" id=facultyToggle>
+                            <div class="col-6 border-end p-2 red-prim" id=facultyToggle>
                                 <div class=" active" role="presentation">User</div>
                             </div>
                             <div class="col-6 p-2 grey-prim" id="expertToggle">
@@ -57,11 +56,12 @@
                                             placeholder="Password">
                                         <label for="facultyPassword">Password</label>
                                     </div>
-                                    <button type="button" class="btn btn-sm bg-primary mt-5 mb-2 px-4 py-1 text-white"
-                                        id="facultyLoginButton" onclick="login(0)">Login</button>
+                                    <button type="button" class="btn btn-lg mt-3 ps-4 pe-4 red-prim text-white"
+                                        id="facultyLoginButton" onclick="login(0)">Login
+                                    </button>
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane pt-4 mb-4" id="expertLoginPane">
+                            <div role="tabpanel" class="tab-pane mb-4" id="expertLoginPane">
                                 <div class="col m-2 p-2">
 
                                     <div class="form-floating mb-4">
@@ -77,7 +77,7 @@
                                             placeholder="Password">
                                         <label for="facultyPassword">Password</label>
                                     </div>
-                                    <button type="button" class="btn btn-sm blu-prim mt-5 mb-2 px-4 py-1 text-white"
+                                    <button type="button" class="btn btn-lg mt-3 ps-4 pe-4 red-prim text-white"
                                         id="expertLoginButton" onclick="login(1)">Login</button>
                                 </div>
                             </div>
@@ -87,8 +87,6 @@
 
                         <!-- <button onclick="logout()">Logoout</button>
                         <button onclick="check()">Check Status</button> -->
-
-
 
                     </div>
                     <!-- <div class="col-md-3">
@@ -100,7 +98,7 @@
         </div>
 
         <script>
-            const url = "https://90b1-182-48-213-190.in.ngrok.io/"
+            const url = "https://3589-223-189-15-181.ngrok-free.app/"
     
             function login(t) {
                 var username;
@@ -192,24 +190,24 @@
             var b = document.getElementById("expertToggle");
             a.addEventListener("click", function () {
                 // toggleing the color
-                b.classList.remove("blu-prim");
+                b.classList.remove("red-prim");
                 b.classList.add("grey-prim");
                 x.classList.add("active");
                 ;
                 // toggleing the color
                 a.classList.remove("grey-prim");
-                a.classList.add("blu-prim");
+                a.classList.add("red-prim");
                 y.classList.remove("active");
             });
             b.addEventListener("click", function () {
 
-                a.classList.remove("blu-prim");
+                a.classList.remove("red-prim");
                 a.classList.add("grey-prim");
                 y.classList.add("active");
 
 
                 b.classList.remove("grey-prim");
-                b.classList.add("blu-prim");
+                b.classList.add("red-prim");
                 x.classList.remove("active");
             });
 
